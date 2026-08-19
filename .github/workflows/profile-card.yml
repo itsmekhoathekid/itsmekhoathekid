@@ -24,6 +24,7 @@ permissions:
 jobs:
   render:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       GH_TOKEN: ${{ github.token }}
       GITHUB_USER: ${{ github.repository_owner }}
@@ -32,14 +33,19 @@ jobs:
       - name: Check out profile repository
         uses: actions/checkout@v4
 
-      - name: Install jp2a and Fastfetch
+      - name: Install jp2a
+        timeout-minutes: 3
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: sudo apt-get install --yes --no-install-recommends jp2a
+
+      - name: Install Fastfetch
+        timeout-minutes: 3
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes jp2a
           curl --location --fail \
             --output /tmp/fastfetch.deb \
             https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb
-          sudo apt-get install --yes /tmp/fastfetch.deb
+          sudo dpkg --install /tmp/fastfetch.deb
 
       - name: Fetch current avatar and GitHub metrics
         run: python3 scripts/fetch_github_metrics.py
