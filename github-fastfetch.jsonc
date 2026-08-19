@@ -32,73 +32,85 @@
     },
     {
       "type": "command",
-      "key": "Public Repos",
+      "key": "Role",
+      "text": "python3 scripts/read_metric.py role"
+    },
+    {
+      "type": "command",
+      "key": "Current Quest",
+      "text": "python3 scripts/read_metric.py current_quest"
+    },
+    {
+      "type": "command",
+      "key": "Status",
+      "text": "python3 scripts/read_metric.py status"
+    },
+    {
+      "type": "command",
+      "key": "Fuel",
+      "text": "python3 scripts/read_metric.py fuel"
+    },
+    {
+      "type": "command",
+      "key": "Timezone",
+      "text": "python3 scripts/read_metric.py timezone_status"
+    },
+    "break",
+    {
+      "type": "command",
+      "key": "◆ Public Repos",
       "text": "python3 scripts/read_metric.py public_repos"
     },
     {
       "type": "command",
-      "key": "Stars Received",
+      "key": "★ Stars",
       "text": "python3 scripts/read_metric.py total_stars"
     },
     {
       "type": "command",
-      "key": "Forks Received",
+      "key": "⑂ Forks",
       "text": "python3 scripts/read_metric.py total_forks"
     },
     {
       "type": "command",
-      "key": "Pull Requests",
+      "key": "↗ Pull Requests",
       "text": "python3 scripts/read_metric.py pull_requests"
     },
     {
       "type": "command",
-      "key": "Issues",
+      "key": "! Issues",
       "text": "python3 scripts/read_metric.py issues"
     },
     {
       "type": "command",
-      "key": "Commits",
+      "key": "● Commits",
       "text": "python3 scripts/read_metric.py commits"
     },
     {
       "type": "command",
-      "key": "Contribs (1y)",
+      "key": "⌁ Contribs (1y)",
       "text": "python3 scripts/read_metric.py contributions_365d"
     },
     {
       "type": "command",
-      "key": "Followers",
+      "key": "♟ Followers",
       "text": "python3 scripts/read_metric.py followers"
     },
     {
       "type": "command",
-      "key": "Following",
-      "text": "python3 scripts/read_metric.py following"
-    },
-    {
-      "type": "command",
-      "key": "Top Language",
+      "key": "λ Main Language",
       "text": "python3 scripts/read_metric.py top_language"
     },
+    "break",
     {
       "type": "command",
-      "key": "Member Since",
-      "text": "python3 scripts/read_metric.py member_since"
-    },
-    {
-      "type": "command",
-      "key": "Profile",
-      "text": "python3 scripts/read_metric.py profile"
+      "key": "Achievement",
+      "text": "python3 scripts/read_metric.py achievement"
     },
     {
       "type": "command",
       "key": "Last Sync",
       "text": "python3 scripts/read_metric.py updated_at"
-    },
-    "break",
-    {
-      "type": "custom",
-      "format": "\u001b[90m██\u001b[31m██\u001b[32m██\u001b[33m██\u001b[34m██\u001b[35m██\u001b[36m██\u001b[37m██\u001b[0m"
     }
   ]
 }

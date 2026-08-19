@@ -2,13 +2,15 @@ name: Update profile terminal card
 
 on:
   schedule:
-    # 09:23 every day in Asia/Ho_Chi_Minh (02:23 UTC).
-    - cron: "23 2 * * *"
+    # Refresh just after 08:00 and 00:00 in Asia/Ho_Chi_Minh.
+    # Minutes are offset from the hour to reduce GitHub Actions queue delays.
+    - cron: "5 1,17 * * *"
   workflow_dispatch:
   push:
     branches: [main]
     paths:
       - "github-fastfetch.jsonc"
+      - "profile.json"
       - "scripts/**"
       - ".github/workflows/profile-card.yml"
 

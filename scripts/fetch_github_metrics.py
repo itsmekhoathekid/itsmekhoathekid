@@ -10,9 +10,10 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 API = "https://api.github.com"
@@ -131,7 +132,9 @@ def main() -> None:
         "top_language": languages.most_common(1)[0][0] if languages else "N/A",
         "member_since": profile["created_at"][:10],
         "profile": f"github.com/{login}",
-        "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        "updated_at": datetime.now(ZoneInfo("Asia/Ho_Chi_Minh")).strftime(
+            "%Y-%m-%d %H:%M ICT"
+        ),
     }
 
     (CACHE_DIR / "metrics.json").write_text(
