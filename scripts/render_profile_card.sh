@@ -18,8 +18,10 @@ fi
 
 jp2a \
   --colors \
+  --color-depth=24 \
   --background=dark \
-  --width=58 \
+  --chars=' .,:;irsXA253hMHGS#9B&@' \
+  --width=42 \
   .cache/github-avatar.jpg \
   | fastfetch \
       --config ./github-fastfetch.jsonc \

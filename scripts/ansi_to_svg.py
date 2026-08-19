@@ -212,11 +212,11 @@ def main() -> None:
     parsed = [row_spans(screen.get(row, {})) for row in range(last_row + 1)]
     columns = max((width for _, width in parsed), default=1)
 
-    font_size = 15
-    character_width = 9.05
-    line_height = 21
-    padding_x = 24
-    padding_y = 26
+    font_size = 16
+    character_width = 9.65
+    line_height = 23
+    padding_x = 20
+    padding_y = 22
     width = round(columns * character_width + padding_x * 2)
     height = max(1, len(parsed)) * line_height + padding_y * 2
 
@@ -224,7 +224,14 @@ def main() -> None:
         '<svg xmlns="http://www.w3.org/2000/svg" role="img" '
         f'aria-label="GitHub profile terminal metrics" width="{width}" height="{height}" '
         f'viewBox="0 0 {width} {height}">',
-        '  <rect width="100%" height="100%" rx="14" fill="#1e1e2e"/>',
+        "  <defs>",
+        '    <linearGradient id="terminal-bg" x1="0" y1="0" x2="1" y2="1">',
+        '      <stop offset="0%" stop-color="#11111b"/>',
+        '      <stop offset="100%" stop-color="#1e1e2e"/>',
+        "    </linearGradient>",
+        "  </defs>",
+        f'  <rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" '
+        'rx="16" fill="url(#terminal-bg)" stroke="#313244"/>',
         '  <g font-family="SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace" '
         f'font-size="{font_size}" xml:space="preserve">',
     ]
