@@ -1,0 +1,64 @@
+name: Update profile terminal card
+
+on:
+  schedule:
+    # 09:23 every day in Asia/Ho_Chi_Minh (02:23 UTC).
+    - cron: "23 2 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "github-fastfetch.jsonc"
+      - "scripts/**"
+      - ".github/workflows/profile-card.yml"
+
+concurrency:
+  group: profile-terminal-card
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_USER: ${{ github.repository_owner }}
+
+    steps:
+      - name: Check out profile repository
+        uses: actions/checkout@v4
+
+      - name: Install jp2a and Fastfetch
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes jp2a
+          curl --location --fail \
+            --output /tmp/fastfetch.deb \
+            https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb
+          sudo apt-get install --yes /tmp/fastfetch.deb
+
+      - name: Fetch current avatar and GitHub metrics
+        run: python3 scripts/fetch_github_metrics.py
+
+      - name: Render terminal SVG
+        run: bash scripts/render_profile_card.sh
+
+      - name: Verify generated SVG
+        run: |
+          test -s github-terminal.svg
+          grep --quiet '<svg' github-terminal.svg
+          python3 scripts/test_profile_card.py
+
+      - name: Commit refreshed card
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add github-terminal.svg
+          if git diff --cached --quiet; then
+            echo "Profile card is already up to date"
+            exit 0
+          fi
+          git commit -m "chore: refresh profile terminal card"
+          git push
