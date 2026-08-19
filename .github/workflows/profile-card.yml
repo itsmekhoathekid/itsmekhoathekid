@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Check out profile repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install jp2a
         timeout-minutes: 3
