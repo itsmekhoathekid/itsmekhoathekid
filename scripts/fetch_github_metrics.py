@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import urllib.error
 import urllib.parse
@@ -49,6 +50,38 @@ def download(url: str, destination: Path) -> None:
     request = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(request, timeout=30) as response:
         destination.write_bytes(response.read())
+
+
+def profile_view_count(login: str) -> int | None:
+    """Read the approximate page-hit count maintained by ghpvc."""
+    query = urllib.parse.urlencode(
+        {
+            "username": login.lower(),
+            "label": "Profile Views",
+            "style": "flat-square",
+            "color": "blue",
+            "abbreviated": "false",
+        }
+    )
+    request = urllib.request.Request(
+        f"https://komarev.com/ghpvc/?{query}",
+        headers={"Accept": "image/svg+xml", "User-Agent": "github-profile-terminal-card"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            badge = response.read().decode("utf-8")
+    except (OSError, UnicodeError, urllib.error.URLError) as error:
+        print(f"warning: profile view counter failed: {error}", file=sys.stderr)
+        return None
+
+    labels = re.findall(r"<text\b[^>]*>([^<]+)</text>", badge)
+    for label in reversed(labels):
+        normalized = label.strip().replace(",", "")
+        if normalized.isdigit():
+            return int(normalized)
+
+    print("warning: profile view counter returned an unknown badge", file=sys.stderr)
+    return None
 
 
 def fetch_all_repositories(login: str) -> list[dict[str, Any]]:
@@ -128,6 +161,7 @@ def main() -> None:
         "commits": search_count(f"author:{login}", endpoint="commits"),
         "contributions_365d": contribution_count(login),
         "followers": profile.get("followers", 0),
+        "profile_views": profile_view_count(login),
         "following": profile.get("following", 0),
         "top_language": languages.most_common(1)[0][0] if languages else "N/A",
         "member_since": profile["created_at"][:10],

@@ -34,6 +34,9 @@ def main() -> None:
     assert "probably awake" in svg or "probably asleep" in svg, "time status is missing"
     assert str(metrics["public_repos"]) in svg, "repository count is missing"
     assert str(metrics["total_stars"]) in svg, "star count is missing"
+    profile_views = metrics.get("profile_views")
+    if profile_views is not None:
+        assert str(profile_views) in svg, "profile view count is missing"
     assert metrics["updated_at"].endswith("ICT"), "last sync is not in Vietnam time"
     assert activity_state(0) == "asleep"
     assert activity_state(7) == "asleep"
@@ -48,6 +51,13 @@ def main() -> None:
 
     colors = set(re.findall(r'fill="(#[0-9a-fA-F]{6})"', svg))
     assert len(colors) >= 32, "avatar was not rendered with a truecolor palette"
+
+    last_sync_position = re.search(
+        r'<tspan x="([0-9.]+)"[^>]*>Last Sync</tspan>',
+        svg,
+    )
+    assert last_sync_position, "last sync row is missing"
+    assert float(last_sync_position.group(1)) >= 400, "last sync fell below the avatar"
 
     print("profile card checks passed")
 

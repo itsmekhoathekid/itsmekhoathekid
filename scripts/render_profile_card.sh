@@ -16,13 +16,19 @@ if [[ ! -s .cache/github-avatar.jpg || ! -s .cache/metrics.json ]]; then
   exit 1
 fi
 
-jp2a \
-  --colors \
-  --color-depth=24 \
-  --background=dark \
-  --chars=' .,:;irsXA253hMHGS#9B&@' \
-  --width=42 \
-  .cache/github-avatar.jpg \
+{
+  jp2a \
+    --colors \
+    --color-depth=24 \
+    --background=dark \
+    --chars=' .,:;irsXA253hMHGS#9B&@' \
+    --width=42 \
+    .cache/github-avatar.jpg
+
+  # Keep Fastfetch's right column anchored until every metric has been printed.
+  # A non-empty character prevents trailing padding rows from being trimmed.
+  printf ' \n \n \n'
+} \
   | fastfetch \
       --config ./github-fastfetch.jsonc \
       --logo-type file-raw \

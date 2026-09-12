@@ -108,6 +108,11 @@
     },
     {
       "type": "command",
+      "key": "◉ Profile Views",
+      "text": "python3 scripts/read_metric.py profile_views"
+    },
+    {
+      "type": "command",
       "key": "λ Main Language",
       "text": "python3 scripts/read_metric.py top_language"
     },

@@ -239,13 +239,19 @@ def main() -> None:
     for line_number, (spans, _) in enumerate(parsed):
         y = padding_y + font_size + line_number * line_height
         span_markup: list[str] = []
+        column = 0
         for text, style in spans:
             weight = ' font-weight="700"' if style.bold else ""
+            x = padding_x + column * character_width
             span_markup.append(
-                f'<tspan fill="{style.color}"{weight}>{html.escape(text)}</tspan>'
+                f'<tspan x="{x:g}" fill="{style.color}"{weight}>'
+                f'{html.escape(text)}</tspan>'
             )
+            column += len(text)
         # Keep tspans adjacent. With xml:space="preserve", source-code newlines and
-        # indentation between tspans would become visible terminal spaces.
+        # indentation between tspans would become visible terminal spaces. Explicit
+        # x positions also make leading terminal padding render consistently in
+        # GitHub's SVG proxy and native image previewers.
         lines.append(
             f'    <text x="{padding_x}" y="{y}">{"".join(span_markup)}</text>'
         )
