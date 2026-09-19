@@ -52,11 +52,17 @@ def main() -> None:
                 + (rebase.stderr.strip() or rebase.stdout.strip())
             )
 
+        pushed_paths = git("diff", "--name-only", "origin/main..HEAD").stdout.splitlines()
+        render_triggered = any(
+            path in {"profile.json", "github-fastfetch.jsonc", ".github/workflows/profile-card.yml"}
+            or path.startswith("scripts/")
+            for path in pushed_paths
+        )
         push = git("push", "origin", "main", check=False)
         if push.returncode == 0:
             if push.stdout.strip():
                 print(push.stdout.strip())
-            if changed:
+            if render_triggered:
                 print("Profile published. GitHub Actions will update github-terminal.svg.")
             else:
                 dispatch = subprocess.run(
