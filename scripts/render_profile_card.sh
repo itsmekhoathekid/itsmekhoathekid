@@ -16,6 +16,8 @@ if [[ ! -s .cache/github-avatar.jpg || ! -s .cache/metrics.json ]]; then
   exit 1
 fi
 
+output=${1:-github-terminal.svg}
+
 {
   jp2a \
     --colors \
@@ -34,4 +36,4 @@ fi
       --logo-type file-raw \
       --logo - \
       --pipe false \
-  | python3 scripts/ansi_to_svg.py github-terminal.svg
+  | python3 scripts/ansi_to_svg.py "$output"

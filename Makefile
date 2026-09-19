@@ -6,11 +6,11 @@ QUEST ?=
 
 help:
 	@printf '%s\n' \
-	  'make card                         Fetch live metrics and render the SVG' \
+	  'make card                         Preview live metrics in .cache/' \
 	  'make quest QUEST="new quest"      Change Current Quest locally' \
-	  'make quest-sync QUEST="new quest" Change Current Quest, render, commit and push' \
-	  'make sync                         Refresh metrics, render, commit and push' \
-	  'make check                        Validate the generated card'
+	  'make quest-sync QUEST="new quest" Change Current Quest and publish it' \
+	  'make sync                         Publish config; Actions updates the live SVG' \
+	  'make check                        Validate the local preview'
 
 metrics:
 	@GH_TOKEN="$${GH_TOKEN:-$$(gh auth token 2>/dev/null || true)}" \
@@ -18,10 +18,10 @@ metrics:
 	  $(PYTHON) scripts/fetch_github_metrics.py
 
 render:
-	bash scripts/render_profile_card.sh
+	bash scripts/render_profile_card.sh .cache/github-terminal-preview.svg
 
 check:
-	$(PYTHON) scripts/test_profile_card.py
+	$(PYTHON) scripts/test_profile_card.py .cache/github-terminal-preview.svg
 
 card: metrics render check
 
@@ -35,10 +35,4 @@ quest-sync:
 	@$(MAKE) sync
 
 sync: card
-	git add profile.json github-terminal.svg
-	@if ! git diff --cached --quiet; then \
-	  git commit -m "chore: refresh profile terminal card"; \
-	else \
-	  printf '%s\n' 'Nothing changed; pushing current branch.'; \
-	fi
-	git push
+	$(PYTHON) scripts/sync_profile.py

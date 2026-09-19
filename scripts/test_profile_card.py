@@ -16,7 +16,8 @@ from read_metric import activity_state, wrapped_value  # noqa: E402
 def main() -> None:
     metrics = json.loads(Path(".cache/metrics.json").read_text(encoding="utf-8"))
     profile = json.loads(Path("profile.json").read_text(encoding="utf-8"))
-    svg = Path("github-terminal.svg").read_text(encoding="utf-8")
+    svg_path = Path(sys.argv[1] if len(sys.argv) > 1 else "github-terminal.svg")
+    svg = svg_path.read_text(encoding="utf-8")
     visible_text = " ".join(html.unescape(re.sub(r"<[^>]+>", " ", svg)).split())
 
     assert svg.startswith("<svg "), "output is not SVG"
